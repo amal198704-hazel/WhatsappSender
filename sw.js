@@ -4,7 +4,7 @@ const ASSETS_TO_CACHE = [
   "/WhatsappSender/",
   "/WhatsappSender/index.html",
   "/WhatsappSender/manifest.json",
-  "/WhatsappSender/icon-192x192.png"
+  "/WhatsappSender/icons/icon-192x192.png"
 ];
 
 // Install event - cache core assets
