@@ -1,12 +1,14 @@
 {
   "name": "WhatsApp India Direct",
   "short_name": "WA Direct",
-  "description": "Send WhatsApp messages without saving contacts. Supports Indian mobile numbers with saved messages.",
+  "description": "Send WhatsApp messages without saving contacts. Supports Indian mobile numbers.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b1a2b",
   "theme_color": "#25D366",
   "orientation": "portrait",
+  "scope": "/",
+  "categories": ["utilities", "communication"],
   "icons": [
     {
       "src": "icon-72x72.png",
