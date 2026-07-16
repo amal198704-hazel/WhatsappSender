@@ -1,759 +1,1013 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#25D366">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <title>WhatsApp India · Saved Messages</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    }
 
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#25D366">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0b1a2b 0%, #1c3a4f 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+    }
 
-    <title>WhatsApp India · Saved Messages</title>
+    .card {
+      max-width: 550px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.93);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 48px 48px 40px 40px;
+      padding: 32px 28px 40px;
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: #1e2f3d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-        }
+    h1 i {
+      color: #25D366;
+      font-size: 2.1rem;
+      filter: drop-shadow(0 4px 6px rgba(37, 211, 102, 0.3));
+    }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #0b1a2b 0%, #1c3a4f 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    .subhead {
+      color: #3d5a6d;
+      font-weight: 400;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      border-left: 4px solid #25D366;
+      padding-left: 14px;
+      background: rgba(37, 211, 102, 0.06);
+      border-radius: 0 12px 12px 0;
+      line-height: 1.4;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-        .card {
-            max-width: 550px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.93);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 48px 48px 40px 40px;
-            padding: 32px 28px 40px;
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1);
-            transition: all 0.2s ease;
-        }
+    .subhead i {
+      margin-right: 4px;
+      color: #1f8b4c;
+    }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: #1e2f3d;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 4px;
-        }
+    .badge-save {
+      background: #1f8b4c;
+      color: white;
+      padding: 2px 14px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
 
-        h1 i {
-            color: #25D366;
-            font-size: 2.1rem;
-            filter: drop-shadow(0 4px 6px rgba(37, 211, 102, 0.3));
-        }
+    .input-group {
+      margin-bottom: 18px;
+    }
 
-        .subhead {
-            color: #3d5a6d;
-            font-weight: 400;
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-            border-left: 4px solid #25D366;
-            padding-left: 14px;
-            background: rgba(37, 211, 102, 0.06);
-            border-radius: 0 12px 12px 0;
-            line-height: 1.4;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #1e3b4b;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
 
-        .subhead i {
-            margin-right: 4px;
-            color: #1f8b4c;
-        }
+    label i {
+      width: 22px;
+      color: #25D366;
+      margin-right: 6px;
+    }
 
-        .badge-save {
-            background: #1f8b4c;
-            color: white;
-            padding: 2px 14px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
+    .input-field {
+      width: 100%;
+      padding: 16px 18px;
+      background: white;
+      border: 2px solid #d9e2e9;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #0b1f2b;
+      transition: all 0.25s ease;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
 
-        .input-group {
-            margin-bottom: 18px;
-        }
+    .input-field:focus {
+      border-color: #25D366;
+      box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.25), inset 0 2px 6px rgba(0,0,0,0.02);
+    }
 
-        label {
-            display: block;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #1e3b4b;
-            margin-bottom: 6px;
-            letter-spacing: 0.3px;
-        }
+    .input-field::placeholder {
+      color: #a0b8c9;
+      font-weight: 400;
+      opacity: 0.8;
+    }
 
-        label i {
-            width: 22px;
-            color: #25D366;
-            margin-right: 6px;
-        }
+    .hint {
+      font-size: 0.78rem;
+      color: #4b6b7e;
+      margin-top: 8px;
+      padding-left: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
 
-        .input-field {
-            width: 100%;
-            padding: 16px 18px;
-            background: white;
-            border: 2px solid #d9e2e9;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #0b1f2b;
-            transition: all 0.25s ease;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
-        }
+    .hint i {
+      color: #3d8b5e;
+      font-size: 0.7rem;
+    }
 
-        .input-field:focus {
-            border-color: #25D366;
-            box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.25), inset 0 2px 6px rgba(0, 0, 0, 0.02);
-        }
+    .hint .badge-india {
+      background: #1f8b4c;
+      color: white;
+      padding: 2px 12px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.7rem;
+      letter-spacing: 0.5px;
+    }
 
-        .input-field::placeholder {
-            color: #a0b8c9;
-            font-weight: 400;
-            opacity: 0.8;
-        }
+    .message-area {
+      margin: 6px 0 12px;
+    }
 
-        .hint {
-            font-size: 0.78rem;
-            color: #4b6b7e;
-            margin-top: 8px;
-            padding-left: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+    .message-area textarea {
+      width: 100%;
+      padding: 16px 18px;
+      border: 2px solid #d9e2e9;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 100px;
+      max-height: 250px;
+      background: white;
+      color: #0b1f2b;
+      transition: all 0.25s ease;
+      outline: none;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+      line-height: 1.5;
+    }
 
-        .hint i {
-            color: #3d8b5e;
-            font-size: 0.7rem;
-        }
+    .message-area textarea:focus {
+      border-color: #25D366;
+      box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.2), inset 0 2px 6px rgba(0,0,0,0.02);
+    }
 
-        .hint .badge-india {
-            background: #1f8b4c;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
-        }
+    .message-area textarea::placeholder {
+      color: #a0b8c9;
+      font-weight: 400;
+    }
 
-        .message-area {
-            margin: 6px 0 12px;
-        }
+    .saved-section {
+      margin: 6px 0 18px;
+      background: #f2f7fb;
+      border-radius: 28px;
+      padding: 14px 16px 16px;
+      border: 1px solid #d9e2e9;
+    }
 
-        .message-area textarea {
-            width: 100%;
-            padding: 16px 18px;
-            border: 2px solid #d9e2e9;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 100px;
-            max-height: 250px;
-            background: white;
-            color: #0b1f2b;
-            transition: all 0.25s ease;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
-            line-height: 1.5;
-        }
+    .saved-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-        .message-area textarea:focus {
-            border-color: #25D366;
-            box-shadow: 0 0 0 5px rgba(37, 211, 102, 0.2), inset 0 2px 6px rgba(0, 0, 0, 0.02);
-        }
+    .saved-header span {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1e3b4b;
+    }
 
-        .message-area textarea::placeholder {
-            color: #a0b8c9;
-            font-weight: 400;
-        }
+    .saved-header span i {
+      color: #25D366;
+      margin-right: 6px;
+    }
 
-        .saved-section {
-            margin: 6px 0 18px;
-            background: #f2f7fb;
-            border-radius: 28px;
-            padding: 14px 16px 16px;
-            border: 1px solid #d9e2e9;
-        }
+    .saved-actions {
+      display: flex;
+      gap: 8px;
+    }
 
-        .saved-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+    .saved-actions button {
+      background: transparent;
+      border: none;
+      color: #3d5a6d;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 30px;
+      transition: all 0.15s ease;
+      font-weight: 500;
+    }
 
-        .saved-header span {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1e3b4b;
-        }
+    .saved-actions button:hover {
+      background: rgba(37, 211, 102, 0.12);
+      color: #1f8b4c;
+    }
 
-        .saved-header span i {
-            color: #25D366;
-            margin-right: 6px;
-        }
+    .saved-actions button.danger:hover {
+      background: rgba(220, 53, 69, 0.12);
+      color: #c0392b;
+    }
 
-        .saved-actions {
-            display: flex;
-            gap: 8px;
-        }
+    .saved-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 110px;
+      overflow-y: auto;
+      padding: 2px 2px 4px;
+    }
 
-        .saved-actions button {
-            background: transparent;
-            border: none;
-            color: #3d5a6d;
-            font-size: 0.8rem;
-            cursor: pointer;
-            padding: 4px 10px;
-            border-radius: 30px;
-            transition: all 0.15s ease;
-            font-weight: 500;
-        }
+    .saved-list::-webkit-scrollbar {
+      width: 4px;
+    }
 
-        .saved-actions button:hover {
-            background: rgba(37, 211, 102, 0.12);
-            color: #1f8b4c;
-        }
+    .saved-list::-webkit-scrollbar-track {
+      background: #e4ebf1;
+      border-radius: 10px;
+    }
 
-        .saved-actions button.danger:hover {
-            background: rgba(220, 53, 69, 0.12);
-            color: #c0392b;
-        }
+    .saved-list::-webkit-scrollbar-thumb {
+      background: #25D366;
+      border-radius: 10px;
+    }
 
-        .saved-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-height: 110px;
-            overflow-y: auto;
-            padding: 2px 2px 4px;
-        }
+    .saved-tag {
+      background: white;
+      border: 1px solid #cbd8e3;
+      padding: 6px 14px 6px 16px;
+      border-radius: 40px;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: #1e2f3d;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      max-width: 100%;
+      word-break: break-word;
+    }
 
-        .saved-list::-webkit-scrollbar {
-            width: 4px;
-        }
+    .saved-tag:hover {
+      background: #e6f3ec;
+      border-color: #25D366;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(37, 211, 102, 0.15);
+    }
 
-        .saved-list::-webkit-scrollbar-track {
-            background: #e4ebf1;
-            border-radius: 10px;
-        }
+    .saved-tag .tag-text {
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        .saved-list::-webkit-scrollbar-thumb {
-            background: #25D366;
-            border-radius: 10px;
-        }
+    .saved-tag .remove-tag {
+      color: #a0b8c9;
+      font-size: 0.7rem;
+      padding: 0 2px;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
 
-        .saved-tag {
-            background: white;
-            border: 1px solid #cbd8e3;
-            padding: 6px 14px 6px 16px;
-            border-radius: 40px;
-            font-size: 0.82rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            color: #1e2f3d;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-            max-width: 100%;
-            word-break: break-word;
-        }
+    .saved-tag .remove-tag:hover {
+      color: #e74c3c;
+    }
 
-        .saved-tag:hover {
-            background: #e6f3ec;
-            border-color: #25D366;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(37, 211, 102, 0.15);
-        }
+    .empty-saved {
+      color: #a0b8c9;
+      font-size: 0.85rem;
+      padding: 8px 0 4px;
+      font-style: italic;
+    }
 
-        .saved-tag .tag-text {
-            max-width: 180px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .send-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
 
-        .saved-tag .remove-tag {
-            color: #a0b8c9;
-            font-size: 0.7rem;
-            padding: 0 2px;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
+    .send-btn {
+      flex: 1;
+      background: #25D366;
+      border: none;
+      padding: 18px 18px;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 12px 18px -8px rgba(37, 211, 102, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-        .saved-tag .remove-tag:hover {
-            color: #e74c3c;
-        }
+    .send-btn i {
+      font-size: 1.3rem;
+      transition: transform 0.2s ease;
+    }
 
-        .empty-saved {
-            color: #a0b8c9;
-            font-size: 0.85rem;
-            padding: 8px 0 4px;
-            font-style: italic;
-        }
+    .send-btn:hover {
+      background: #1da851;
+      transform: scale(1.02);
+      box-shadow: 0 18px 28px -10px rgba(37, 211, 102, 0.6);
+    }
 
-        .send-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 4px;
-        }
+    .send-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 6px 12px -4px rgba(37, 211, 102, 0.5);
+    }
 
-        .send-btn {
-            flex: 1;
-            background: #25D366;
-            border: none;
-            padding: 18px 18px;
-            border-radius: 60px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 12px 18px -8px rgba(37, 211, 102, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+    .send-btn:disabled {
+      opacity: 0.6;
+      transform: scale(0.98);
+      box-shadow: none;
+      pointer-events: none;
+    }
 
-        .send-btn i {
-            font-size: 1.3rem;
-            transition: transform 0.2s ease;
-        }
+    .save-btn {
+      background: #e8edf2;
+      border: none;
+      padding: 18px 20px;
+      border-radius: 60px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e3b4b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #d0d9e2;
+      min-width: 60px;
+    }
 
-        .send-btn:hover {
-            background: #1da851;
-            transform: scale(1.02);
-            box-shadow: 0 18px 28px -10px rgba(37, 211, 102, 0.6);
-        }
+    .save-btn:hover {
+      background: #d5e0ea;
+      transform: scale(1.02);
+    }
 
-        .send-btn:active {
-            transform: scale(0.97);
-            box-shadow: 0 6px 12px -4px rgba(37, 211, 102, 0.5);
-        }
+    .save-btn:active {
+      transform: scale(0.95);
+    }
 
-        .send-btn:disabled {
-            opacity: 0.6;
-            transform: scale(0.98);
-            box-shadow: none;
-            pointer-events: none;
-        }
+    .save-btn i {
+      color: #1f8b4c;
+    }
 
-        .save-btn {
-            background: #e8edf2;
-            border: none;
-            padding: 18px 20px;
-            border-radius: 60px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1e3b4b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #d0d9e2;
-            min-width: 60px;
-        }
+    .footer-note {
+      margin-top: 22px;
+      text-align: center;
+      color: #3a5f74;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      padding-top: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
 
-        .save-btn:hover {
-            background: #d5e0ea;
-            transform: scale(1.02);
-        }
+    .footer-note span {
+      background: rgba(37, 211, 102, 0.08);
+      padding: 4px 16px;
+      border-radius: 30px;
+      font-weight: 500;
+    }
 
-        .save-btn:active {
-            transform: scale(0.95);
-        }
+    .footer-note i {
+      color: #25D366;
+      margin-right: 6px;
+    }
 
-        .save-btn i {
-            color: #1f8b4c;
-        }
+    /* ====== INSTALL POPUP STYLES ====== */
+    .install-popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
 
-        .footer-note {
-            margin-top: 22px;
-            text-align: center;
-            color: #3a5f74;
-            font-size: 0.8rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            padding-top: 16px;
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
+    .install-popup-overlay.active {
+      display: flex;
+    }
 
-        .footer-note span {
-            background: rgba(37, 211, 102, 0.08);
-            padding: 4px 16px;
-            border-radius: 30px;
-            font-weight: 500;
-        }
+    .install-popup {
+      background: white;
+      max-width: 380px;
+      width: 90%;
+      border-radius: 40px;
+      padding: 36px 28px 32px;
+      text-align: center;
+      box-shadow: 0 40px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.4s ease;
+      position: relative;
+    }
 
-        .footer-note i {
-            color: #25D366;
-            margin-right: 6px;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-        @media (max-width: 500px) {
-            .card {
-                padding: 24px 16px 32px;
-                border-radius: 36px 36px 28px 28px;
-            }
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
 
-            h1 {
-                font-size: 1.7rem;
-            }
+    .install-popup .popup-icon {
+      font-size: 4rem;
+      color: #25D366;
+      margin-bottom: 12px;
+    }
 
-            .send-btn,
-            .save-btn {
-                font-size: 1rem;
-                padding: 14px 16px;
-            }
+    .install-popup h2 {
+      font-size: 1.5rem;
+      color: #1e2f3d;
+      margin-bottom: 8px;
+    }
 
-            .save-btn {
-                min-width: 50px;
-                padding: 14px 14px;
-            }
+    .install-popup p {
+      color: #4b6b7e;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
 
-            .input-field,
-            .message-area textarea {
-                padding: 14px 16px;
-            }
+    .install-popup .popup-instructions {
+      background: #f2f7fb;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 16px 0 20px;
+      text-align: left;
+      font-size: 0.9rem;
+      color: #1e3b4b;
+    }
 
-            .saved-tag .tag-text {
-                max-width: 120px;
-            }
-        }
-    </style>
+    .install-popup .popup-instructions i {
+      color: #25D366;
+      width: 24px;
+      margin-right: 8px;
+    }
+
+    .install-popup .popup-instructions .step {
+      display: flex;
+      align-items: center;
+      padding: 6px 0;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .popup-buttons button {
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .popup-buttons .btn-install {
+      background: #25D366;
+      color: white;
+      flex: 1;
+      box-shadow: 0 8px 16px -4px rgba(37, 211, 102, 0.4);
+    }
+
+    .popup-buttons .btn-install:hover {
+      background: #1da851;
+      transform: scale(1.02);
+    }
+
+    .popup-buttons .btn-later {
+      background: #e8edf2;
+      color: #1e3b4b;
+      flex: 0.6;
+    }
+
+    .popup-buttons .btn-later:hover {
+      background: #d5e0ea;
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: #a0b8c9;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .popup-close:hover {
+      color: #e74c3c;
+    }
+
+    @media (max-width: 480px) {
+      .install-popup {
+        padding: 28px 20px 24px;
+      }
+      .popup-buttons {
+        flex-direction: column;
+      }
+      .popup-buttons .btn-install,
+      .popup-buttons .btn-later {
+        flex: 1;
+        width: 100%;
+      }
+      .install-popup h2 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-    <div class="card">
-        <h1>
-            <i class="fab fa-whatsapp"></i> India Direct
-        </h1>
-        <div class="subhead">
-            <span><i class="fas fa-arrow-right"></i> Send without saving · <strong>+91</strong> or 10-digit</span>
-            <span class="badge-save"><i class="fas fa-bookmark"></i> saved messages</span>
-        </div>
-
-        <!-- mobile number -->
-        <div class="input-group">
-            <label for="phoneInput"><i class="fas fa-phone-alt"></i> Mobile number</label>
-            <input type="tel" id="phoneInput" class="input-field" placeholder="+91 73056 38828 or 7305638828" value="">
-            <div class="hint">
-                <i class="fas fa-info-circle"></i>
-                <span>Accepts <strong>+91</strong>, <strong>91</strong>, or plain 10 digits · last 10 digits used</span>
-                <span class="badge-india"><i class="fas fa-map-marker-alt"></i> INDIA</span>
-            </div>
-        </div>
-
-        <!-- message + save -->
-        <div class="message-area">
-            <label for="msgInput"><i class="fas fa-comment-dots"></i> Message</label>
-            <textarea id="msgInput" placeholder="Type your message here …" rows="4"></textarea>
-        </div>
-
-        <!-- saved messages -->
-        <div class="saved-section" id="savedSection">
-            <div class="saved-header">
-                <span><i class="fas fa-bookmark"></i> Saved messages</span>
-                <div class="saved-actions">
-                    <button id="clearAllSaved" class="danger" title="Delete all saved messages"><i
-                            class="fas fa-trash-alt"></i> Clear</button>
-                </div>
-            </div>
-            <div id="savedList" class="saved-list">
-                <!-- dynamically populated -->
-            </div>
-        </div>
-
-        <!-- send + save button row -->
-        <div class="send-row">
-            <button id="sendBtn" class="send-btn">
-                <i class="fab fa-whatsapp"></i> Send
-            </button>
-            <button id="saveMsgBtn" class="save-btn" title="Save current message">
-                <i class="fas fa-plus"></i> Save
-            </button>
-        </div>
-
-        <div class="footer-note">
-            <span><i class="fas fa-check-circle"></i> No contacts saved</span>
-            <span><i class="fas fa-lock"></i> Private</span>
-            <span><i class="fas fa-database"></i> stored locally</span>
-        </div>
+<!-- ====== INSTALL POPUP ====== -->
+<div id="installPopup" class="install-popup-overlay">
+  <div class="install-popup">
+    <button class="popup-close" id="closePopup" aria-label="Close">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="popup-icon">
+      <i class="fab fa-whatsapp"></i>
+    </div>
+    <h2>Install App</h2>
+    <p>Get a faster, app-like experience with offline support.</p>
+    
+    <div class="popup-instructions">
+      <div class="step">
+        <i class="fas fa-arrow-down"></i>
+        <span>Tap the <strong>Share</strong> or <strong>Menu</strong> icon in your browser</span>
+      </div>
+      <div class="step">
+        <i class="fas fa-plus-circle"></i>
+        <span>Select <strong>Add to Home Screen</strong> or <strong>Install App</strong></span>
+      </div>
+      <div class="step">
+        <i class="fas fa-check-circle"></i>
+        <span>Follow the prompts to install</span>
+      </div>
     </div>
 
-    <script>
-        // ============================================================
-        // MAIN APPLICATION SCRIPT
-        // ============================================================
-        (function () {
-            // DOM refs
-            const phoneInput = document.getElementById('phoneInput');
-            const msgInput = document.getElementById('msgInput');
-            const sendBtn = document.getElementById('sendBtn');
-            const saveMsgBtn = document.getElementById('saveMsgBtn');
-            const savedListEl = document.getElementById('savedList');
-            const clearAllBtn = document.getElementById('clearAllSaved');
+    <div class="popup-buttons">
+      <button class="btn-install" id="installBtn">
+        <i class="fas fa-download"></i> Install
+      </button>
+      <button class="btn-later" id="laterBtn">Later</button>
+    </div>
+  </div>
+</div>
 
-            // ---------- storage key ----------
-            const STORAGE_KEY = 'whatsapp_india_saved_messages';
+<!-- ====== MAIN APP ====== -->
+<div class="card">
+  <h1>
+    <i class="fab fa-whatsapp"></i> India Direct
+  </h1>
+  <div class="subhead">
+    <span><i class="fas fa-arrow-right"></i> Send without saving · <strong>+91</strong> or 10-digit</span>
+    <span class="badge-save"><i class="fas fa-bookmark"></i> saved messages</span>
+  </div>
 
-            // ---------- load saved messages from localStorage ----------
-            function loadSavedMessages() {
-                try {
-                    const data = localStorage.getItem(STORAGE_KEY);
-                    if (data) {
-                        const parsed = JSON.parse(data);
-                        return Array.isArray(parsed) ? parsed : [];
-                    }
-                } catch (e) {
-                    console.warn('Failed to load saved messages', e);
-                }
-                return [];
-            }
+  <!-- mobile number -->
+  <div class="input-group">
+    <label for="phoneInput"><i class="fas fa-phone-alt"></i> Mobile number</label>
+    <input type="tel" id="phoneInput" class="input-field" placeholder="+91 73056 38828 or 7305638828" value="">
+    <div class="hint">
+      <i class="fas fa-info-circle"></i> 
+      <span>Accepts <strong>+91</strong>, <strong>91</strong>, or plain 10 digits · last 10 digits used</span>
+      <span class="badge-india"><i class="fas fa-map-marker-alt"></i> INDIA</span>
+    </div>
+  </div>
 
-            // ---------- save messages array to localStorage ----------
-            function persistMessages(messages) {
-                try {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-                } catch (e) {
-                    console.warn('Failed to save messages', e);
-                }
-            }
+  <!-- message + save -->
+  <div class="message-area">
+    <label for="msgInput"><i class="fas fa-comment-dots"></i> Message</label>
+    <textarea id="msgInput" placeholder="Type your message here …" rows="4"></textarea>
+  </div>
 
-            // ---------- render saved tags ----------
-            function renderSavedMessages() {
-                const messages = loadSavedMessages();
-                if (messages.length === 0) {
-                    savedListEl.innerHTML = `<div class="empty-saved"><i class="fas fa-info-circle"></i> No saved messages yet. Type &amp; click Save.</div>`;
-                    return;
-                }
+  <!-- saved messages -->
+  <div class="saved-section" id="savedSection">
+    <div class="saved-header">
+      <span><i class="fas fa-bookmark"></i> Saved messages</span>
+      <div class="saved-actions">
+        <button id="clearAllSaved" class="danger" title="Delete all saved messages"><i class="fas fa-trash-alt"></i> Clear</button>
+      </div>
+    </div>
+    <div id="savedList" class="saved-list">
+      <!-- dynamically populated -->
+    </div>
+  </div>
 
-                let html = '';
-                messages.forEach((msg, index) => {
-                    const displayText = msg.length > 40 ? msg.substring(0, 37) + '…' : msg;
-                    const safeMsg = msg.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    html += `
+  <!-- send + save button row -->
+  <div class="send-row">
+    <button id="sendBtn" class="send-btn">
+      <i class="fab fa-whatsapp"></i> Send
+    </button>
+    <button id="saveMsgBtn" class="save-btn" title="Save current message">
+      <i class="fas fa-plus"></i> Save
+    </button>
+  </div>
+
+  <div class="footer-note">
+    <span><i class="fas fa-check-circle"></i> No contacts saved</span>
+    <span><i class="fas fa-lock"></i> Private</span>
+    <span><i class="fas fa-database"></i> stored locally</span>
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  // MAIN APPLICATION SCRIPT
+  // ============================================================
+  (function() {
+    // DOM refs
+    const phoneInput = document.getElementById('phoneInput');
+    const msgInput = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const saveMsgBtn = document.getElementById('saveMsgBtn');
+    const savedListEl = document.getElementById('savedList');
+    const clearAllBtn = document.getElementById('clearAllSaved');
+
+    // ---------- storage key ----------
+    const STORAGE_KEY = 'whatsapp_india_saved_messages';
+
+    // ---------- load saved messages from localStorage ----------
+    function loadSavedMessages() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (data) {
+          const parsed = JSON.parse(data);
+          return Array.isArray(parsed) ? parsed : [];
+        }
+      } catch (e) {
+        console.warn('Failed to load saved messages', e);
+      }
+      return [];
+    }
+
+    // ---------- save messages array to localStorage ----------
+    function persistMessages(messages) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      } catch (e) {
+        console.warn('Failed to save messages', e);
+      }
+    }
+
+    // ---------- render saved tags ----------
+    function renderSavedMessages() {
+      const messages = loadSavedMessages();
+      if (messages.length === 0) {
+        savedListEl.innerHTML = `<div class="empty-saved"><i class="fas fa-info-circle"></i> No saved messages yet. Type &amp; click Save.</div>`;
+        return;
+      }
+
+      let html = '';
+      messages.forEach((msg, index) => {
+        const displayText = msg.length > 40 ? msg.substring(0, 37) + '…' : msg;
+        html += `
           <div class="saved-tag" data-index="${index}" title="Click to use this message">
             <span class="tag-text">${displayText}</span>
             <span class="remove-tag" data-index="${index}" title="Delete this message"><i class="fas fa-times-circle"></i></span>
           </div>
         `;
-                });
-                savedListEl.innerHTML = html;
+      });
+      savedListEl.innerHTML = html;
 
-                // event listeners for click to fill message
-                document.querySelectorAll('.saved-tag').forEach(tag => {
-                    tag.addEventListener('click', function (e) {
-                        if (e.target.closest('.remove-tag')) return;
-                        const index = parseInt(this.dataset.index, 10);
-                        const messages = loadSavedMessages();
-                        if (messages[index] !== undefined) {
-                            msgInput.value = messages[index];
-                            msgInput.focus();
-                        }
-                    });
-                });
+      // event listeners for click to fill message
+      document.querySelectorAll('.saved-tag').forEach(tag => {
+        tag.addEventListener('click', function(e) {
+          if (e.target.closest('.remove-tag')) return;
+          const index = parseInt(this.dataset.index, 10);
+          const messages = loadSavedMessages();
+          if (messages[index] !== undefined) {
+            msgInput.value = messages[index];
+            msgInput.focus();
+          }
+        });
+      });
 
-                // event listeners for remove (X) button
-                document.querySelectorAll('.remove-tag').forEach(btn => {
-                    btn.addEventListener('click', function (e) {
-                        e.stopPropagation();
-                        const index = parseInt(this.dataset.index, 10);
-                        const messages = loadSavedMessages();
-                        if (messages[index] !== undefined) {
-                            messages.splice(index, 1);
-                            persistMessages(messages);
-                            renderSavedMessages();
-                        }
-                    });
-                });
-            }
-
-            // ---------- save current message ----------
-            function saveCurrentMessage() {
-                const msg = msgInput.value.trim();
-                if (!msg) {
-                    alert('📝 Please type a message to save.');
-                    msgInput.focus();
-                    return;
-                }
-
-                const messages = loadSavedMessages();
-                if (messages.includes(msg)) {
-                    alert('⚠️ This message is already saved.');
-                    return;
-                }
-
-                messages.push(msg);
-                persistMessages(messages);
-                renderSavedMessages();
-                saveMsgBtn.innerHTML = `<i class="fas fa-check"></i> Saved!`;
-                setTimeout(() => {
-                    saveMsgBtn.innerHTML = `<i class="fas fa-plus"></i> Save`;
-                }, 1200);
-            }
-
-            // ---------- clear all saved messages ----------
-            function clearAllSaved() {
-                if (loadSavedMessages().length === 0) {
-                    alert('No saved messages to clear.');
-                    return;
-                }
-                if (confirm('🗑️ Delete all saved messages?')) {
-                    persistMessages([]);
-                    renderSavedMessages();
-                }
-            }
-
-            // ---------- extract last 10 digits (India) ----------
-            function extractIndianNumber(raw) {
-                let digits = raw.replace(/\D/g, '');
-                if (digits.length > 10) {
-                    digits = digits.slice(-10);
-                }
-                return digits;
-            }
-
-            // ---------- build WhatsApp URL ----------
-            function buildWhatsAppUrl(phoneNumber, message) {
-                const tenDigits = extractIndianNumber(phoneNumber);
-                if (tenDigits.length !== 10) return null;
-                const internationalNumber = '91' + tenDigits;
-                const encodedMessage = encodeURIComponent(message.trim() || '');
-                return `https://wa.me/${internationalNumber}?text=${encodedMessage}`;
-            }
-
-            // ---------- send action ----------
-            function sendToWhatsApp() {
-                const phoneRaw = phoneInput.value.trim();
-                const messageRaw = msgInput.value;
-
-                if (!phoneRaw) {
-                    alert('📱 Please enter a mobile number.');
-                    phoneInput.focus();
-                    return;
-                }
-
-                const digitsOnly = extractIndianNumber(phoneRaw);
-                if (digitsOnly.length !== 10) {
-                    alert('⚠️ Please enter a valid 10-digit Indian mobile number.\n\nExamples:\n+91 73056 38828\n917305638828\n7305638828');
-                    phoneInput.focus();
-                    return;
-                }
-
-                if (!messageRaw.trim()) {
-                    const confirmSend = confirm('📝 Your message is empty. Do you want to continue?');
-                    if (!confirmSend) {
-                        msgInput.focus();
-                        return;
-                    }
-                }
-
-                const url = buildWhatsAppUrl(phoneRaw, messageRaw);
-                if (!url) {
-                    alert('❌ Invalid number. Please enter a 10-digit Indian mobile number.');
-                    return;
-                }
-
-                try {
-                    const newWindow = window.open(url, '_blank');
-                    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-                        window.location.href = url;
-                    }
-                } catch (e) {
-                    window.location.href = url;
-                }
-
-                sendBtn.innerHTML = `<i class="fas fa-check-circle"></i> Opening...`;
-                sendBtn.disabled = true;
-                setTimeout(() => {
-                    sendBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Send`;
-                    sendBtn.disabled = false;
-                }, 4000);
-            }
-
-            // ---------- event listeners ----------
-            sendBtn.addEventListener('click', sendToWhatsApp);
-            saveMsgBtn.addEventListener('click', saveCurrentMessage);
-            clearAllBtn.addEventListener('click', clearAllSaved);
-
-            phoneInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    msgInput.focus();
-                }
-            });
-
-            msgInput.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                    e.preventDefault();
-                    sendBtn.click();
-                }
-            });
-
-            phoneInput.addEventListener('blur', function () {
-                this.value = this.value.trim().replace(/\s+/g, ' ');
-            });
-
-            // initial render
+      // event listeners for remove (X) button
+      document.querySelectorAll('.remove-tag').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const index = parseInt(this.dataset.index, 10);
+          const messages = loadSavedMessages();
+          if (messages[index] !== undefined) {
+            messages.splice(index, 1);
+            persistMessages(messages);
             renderSavedMessages();
+          }
+        });
+      });
+    }
 
-            console.log('✅ WhatsApp India Direct with saved messages. Store & reuse your texts.');
-        })();
+    // ---------- save current message ----------
+    function saveCurrentMessage() {
+      const msg = msgInput.value.trim();
+      if (!msg) {
+        alert('📝 Please type a message to save.');
+        msgInput.focus();
+        return;
+      }
 
-        // ============================================================
-        // SERVICE WORKER REGISTRATION
-        // ============================================================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(function (registration) {
-                        console.log('[PWA] Service Worker registered successfully:', registration);
-                    })
-                    .catch(function (error) {
-                        console.error('[PWA] Service Worker registration failed:', error);
-                    });
-            });
+      const messages = loadSavedMessages();
+      if (messages.includes(msg)) {
+        alert('⚠️ This message is already saved.');
+        return;
+      }
+
+      messages.push(msg);
+      persistMessages(messages);
+      renderSavedMessages();
+      saveMsgBtn.innerHTML = `<i class="fas fa-check"></i> Saved!`;
+      setTimeout(() => {
+        saveMsgBtn.innerHTML = `<i class="fas fa-plus"></i> Save`;
+      }, 1200);
+    }
+
+    // ---------- clear all saved messages ----------
+    function clearAllSaved() {
+      if (loadSavedMessages().length === 0) {
+        alert('No saved messages to clear.');
+        return;
+      }
+      if (confirm('🗑️ Delete all saved messages?')) {
+        persistMessages([]);
+        renderSavedMessages();
+      }
+    }
+
+    // ---------- extract last 10 digits (India) ----------
+    function extractIndianNumber(raw) {
+      let digits = raw.replace(/\D/g, '');
+      if (digits.length > 10) {
+        digits = digits.slice(-10);
+      }
+      return digits;
+    }
+
+    // ---------- build WhatsApp URL ----------
+    function buildWhatsAppUrl(phoneNumber, message) {
+      const tenDigits = extractIndianNumber(phoneNumber);
+      if (tenDigits.length !== 10) return null;
+      const internationalNumber = '91' + tenDigits;
+      const encodedMessage = encodeURIComponent(message.trim() || '');
+      return `https://wa.me/${internationalNumber}?text=${encodedMessage}`;
+    }
+
+    // ---------- send action ----------
+    function sendToWhatsApp() {
+      const phoneRaw = phoneInput.value.trim();
+      const messageRaw = msgInput.value;
+
+      if (!phoneRaw) {
+        alert('📱 Please enter a mobile number.');
+        phoneInput.focus();
+        return;
+      }
+
+      const digitsOnly = extractIndianNumber(phoneRaw);
+      if (digitsOnly.length !== 10) {
+        alert('⚠️ Please enter a valid 10-digit Indian mobile number.\n\nExamples:\n+91 73056 38828\n917305638828\n7305638828');
+        phoneInput.focus();
+        return;
+      }
+
+      if (!messageRaw.trim()) {
+        const confirmSend = confirm('📝 Your message is empty. Do you want to continue?');
+        if (!confirmSend) {
+          msgInput.focus();
+          return;
         }
-    </script>
+      }
+
+      const url = buildWhatsAppUrl(phoneRaw, messageRaw);
+      if (!url) {
+        alert('❌ Invalid number. Please enter a 10-digit Indian mobile number.');
+        return;
+      }
+
+      try {
+        const newWindow = window.open(url, '_blank');
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+          window.location.href = url;
+        }
+      } catch (e) {
+        window.location.href = url;
+      }
+
+      sendBtn.innerHTML = `<i class="fas fa-check-circle"></i> Opening...`;
+      sendBtn.disabled = true;
+      setTimeout(() => {
+        sendBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Send`;
+        sendBtn.disabled = false;
+      }, 4000);
+    }
+
+    // ---------- event listeners ----------
+    sendBtn.addEventListener('click', sendToWhatsApp);
+    saveMsgBtn.addEventListener('click', saveCurrentMessage);
+    clearAllBtn.addEventListener('click', clearAllSaved);
+
+    phoneInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        msgInput.focus();
+      }
+    });
+
+    msgInput.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        sendBtn.click();
+      }
+    });
+
+    phoneInput.addEventListener('blur', function() {
+      this.value = this.value.trim().replace(/\s+/g, ' ');
+    });
+
+    // initial render
+    renderSavedMessages();
+
+    console.log('✅ WhatsApp India Direct with saved messages. Store & reuse your texts.');
+  })();
+
+  // ============================================================
+  // PWA INSTALL POPUP LOGIC
+  // ============================================================
+  (function() {
+    const popup = document.getElementById('installPopup');
+    const closeBtn = document.getElementById('closePopup');
+    const laterBtn = document.getElementById('laterBtn');
+    const installBtn = document.getElementById('installBtn');
+    let deferredPrompt = null;
+
+    // Check if app is already installed (standalone mode)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                         window.navigator.standalone === true;
+
+    // Only show popup if not already installed
+    if (!isStandalone) {
+      // Show popup after 3 seconds
+      setTimeout(() => {
+        // Check if we've already shown it recently (session storage)
+        const popupShown = sessionStorage.getItem('installPopupShown');
+        if (!popupShown) {
+          popup.classList.add('active');
+          sessionStorage.setItem('installPopupShown', 'true');
+        }
+      }, 3000);
+    }
+
+    // Close popup
+    function closePopup() {
+      popup.classList.remove('active');
+    }
+
+    closeBtn.addEventListener('click', closePopup);
+    laterBtn.addEventListener('click', closePopup);
+
+    // Click outside to close
+    popup.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closePopup();
+      }
+    });
+
+    // Install button - trigger native install or show instructions
+    installBtn.addEventListener('click', function() {
+      if (deferredPrompt) {
+        // Native install prompt available
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+          deferredPrompt = null;
+          closePopup();
+        });
+      } else {
+        // No native prompt - show instructions (already visible in popup)
+        // Just close the popup after a moment
+        alert('📱 To install this app:\n\n1. Tap the Share or Menu button\n2. Select "Add to Home Screen"\n3. Follow the prompts');
+        closePopup();
+      }
+    });
+
+    // Listen for the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later
+      deferredPrompt = e;
+      console.log('[PWA] beforeinstallprompt event captured');
+      
+      // Show the popup if it's not already showing
+      if (!popup.classList.contains('active')) {
+        setTimeout(() => {
+          const popupShown = sessionStorage.getItem('installPopupShown');
+          if (!popupShown) {
+            popup.classList.add('active');
+            sessionStorage.setItem('installPopupShown', 'true');
+          }
+        }, 2000);
+      }
+    });
+
+    // Handle successful installation
+    window.addEventListener('appinstalled', (e) => {
+      console.log('[PWA] App was installed successfully');
+      closePopup();
+      // Optional: show a success message
+      setTimeout(() => {
+        alert('🎉 App installed successfully! You can now use it from your home screen.');
+      }, 500);
+    });
+
+    console.log('[PWA] Install popup ready');
+  })();
+
+  // ============================================================
+  // SERVICE WORKER REGISTRATION
+  // ============================================================
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js')
+        .then(function(registration) {
+          console.log('[PWA] Service Worker registered successfully:', registration);
+        })
+        .catch(function(error) {
+          console.error('[PWA] Service Worker registration failed:', error);
+        });
+    });
+  }
+</script>
 
 </body>
-
 </html>
