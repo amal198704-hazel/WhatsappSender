@@ -1,6 +1,5 @@
 
 const CACHE_NAME = "whatsapp-v2";
-
 const ASSETS_TO_CACHE = [
   "/WhatsappSender/",
   "/WhatsappSender/index.html",
