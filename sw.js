@@ -1,11 +1,11 @@
-const CACHE_NAME = 'whatsapp-india-direct-v1';
+
+const CACHE_NAME = "whatsapp-v2";
+
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  // Add icons here if you want them cached
-  // '/icon-192x192.png',
-  // '/icon-512x512.png'
+  "/WhatsappSender/",
+  "/WhatsappSender/index.html",
+  "/WhatsappSender/manifest.json",
+  "/WhatsappSender/icon-192x192.png"
 ];
 
 // Install event - cache core assets
