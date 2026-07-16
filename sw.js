@@ -8,14 +8,25 @@ const ASSETS_TO_CACHE = [
 ];
 
 // Install event - cache core assets
-self.addEventListener('install', (event) => {
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[SW] Caching assets');
-        return cache.addAll(ASSETS_TO_CACHE);
-      })
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const file of ASSETS_TO_CACHE) {
+        try {
+          console.log("Caching:", file);
+
+          const response = await fetch(file);
+
+          console.log(file, response.status);
+
+          await cache.put(file, response);
+        } catch (err) {
+          console.error("FAILED:", file, err);
+        }
+      }
+
+      self.skipWaiting();
+    })
   );
 });
 
