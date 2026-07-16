@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json">
+  <!-- PWA Manifest - IMPORTANT: Use absolute path -->
+  <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#25D366">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <title>WhatsApp India · Saved Messages</title>
+  <title>WhatsApp India Direct</title>
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -426,197 +426,147 @@
       margin-right: 6px;
     }
 
-    /* ====== INSTALL POPUP STYLES ====== */
-    .install-popup-overlay {
+    /* ====== INSTALL BANNER ====== */
+    .install-banner {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .install-popup-overlay.active {
-      display: flex;
-    }
-
-    .install-popup {
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       background: white;
-      max-width: 380px;
+      border-radius: 20px;
+      padding: 16px 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      z-index: 9998;
+      max-width: 400px;
       width: 90%;
-      border-radius: 40px;
-      padding: 36px 28px 32px;
-      text-align: center;
-      box-shadow: 0 40px 60px rgba(0, 0, 0, 0.5);
-      animation: slideUp 0.4s ease;
-      position: relative;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .install-popup .popup-icon {
-      font-size: 4rem;
-      color: #25D366;
-      margin-bottom: 12px;
-    }
-
-    .install-popup h2 {
-      font-size: 1.5rem;
-      color: #1e2f3d;
-      margin-bottom: 8px;
-    }
-
-    .install-popup p {
-      color: #4b6b7e;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 8px;
-    }
-
-    .install-popup .popup-instructions {
-      background: #f2f7fb;
-      border-radius: 16px;
-      padding: 16px;
-      margin: 16px 0 20px;
-      text-align: left;
-      font-size: 0.9rem;
-      color: #1e3b4b;
-    }
-
-    .install-popup .popup-instructions i {
-      color: #25D366;
-      width: 24px;
-      margin-right: 8px;
-    }
-
-    .install-popup .popup-instructions .step {
-      display: flex;
       align-items: center;
-      padding: 6px 0;
+      gap: 16px;
+      animation: slideUp 0.4s ease;
+      border: 1px solid rgba(37, 211, 102, 0.2);
     }
 
-    .popup-buttons {
+    .install-banner.active {
       display: flex;
-      gap: 12px;
-      justify-content: center;
     }
 
-    .popup-buttons button {
-      padding: 14px 28px;
-      border-radius: 60px;
+    .install-banner .banner-icon {
+      font-size: 2.5rem;
+      color: #25D366;
+      flex-shrink: 0;
+    }
+
+    .install-banner .banner-text {
+      flex: 1;
+    }
+
+    .install-banner .banner-text h4 {
       font-size: 1rem;
+      color: #1e2f3d;
+      margin-bottom: 2px;
+    }
+
+    .install-banner .banner-text p {
+      font-size: 0.85rem;
+      color: #4b6b7e;
+      margin: 0;
+    }
+
+    .install-banner .banner-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .install-banner .banner-actions button {
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: none;
       font-weight: 600;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.2s ease;
-      border: none;
     }
 
-    .popup-buttons .btn-install {
+    .install-banner .btn-install-banner {
       background: #25D366;
       color: white;
-      flex: 1;
-      box-shadow: 0 8px 16px -4px rgba(37, 211, 102, 0.4);
     }
 
-    .popup-buttons .btn-install:hover {
+    .install-banner .btn-install-banner:hover {
       background: #1da851;
-      transform: scale(1.02);
     }
 
-    .popup-buttons .btn-later {
-      background: #e8edf2;
-      color: #1e3b4b;
-      flex: 0.6;
-    }
-
-    .popup-buttons .btn-later:hover {
-      background: #d5e0ea;
-    }
-
-    .popup-close {
-      position: absolute;
-      top: 14px;
-      right: 18px;
-      background: none;
-      border: none;
-      font-size: 1.4rem;
+    .install-banner .btn-close-banner {
+      background: transparent;
       color: #a0b8c9;
-      cursor: pointer;
-      transition: color 0.2s;
     }
 
-    .popup-close:hover {
+    .install-banner .btn-close-banner:hover {
       color: #e74c3c;
     }
 
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(60px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+
     @media (max-width: 480px) {
-      .install-popup {
-        padding: 28px 20px 24px;
+      .card {
+        padding: 24px 16px 32px;
+        border-radius: 36px 36px 28px 28px;
       }
-      .popup-buttons {
-        flex-direction: column;
+      h1 {
+        font-size: 1.7rem;
       }
-      .popup-buttons .btn-install,
-      .popup-buttons .btn-later {
-        flex: 1;
-        width: 100%;
+      .send-btn, .save-btn {
+        font-size: 1rem;
+        padding: 14px 16px;
       }
-      .install-popup h2 {
-        font-size: 1.3rem;
+      .save-btn {
+        min-width: 50px;
+        padding: 14px 14px;
+      }
+      .input-field, .message-area textarea {
+        padding: 14px 16px;
+      }
+      .saved-tag .tag-text {
+        max-width: 120px;
+      }
+      .install-banner {
+        padding: 12px 16px;
+        bottom: 10px;
+      }
+      .install-banner .banner-icon {
+        font-size: 2rem;
+      }
+      .install-banner .banner-text h4 {
+        font-size: 0.9rem;
+      }
+      .install-banner .banner-text p {
+        font-size: 0.75rem;
+      }
+      .install-banner .banner-actions button {
+        padding: 6px 12px;
+        font-size: 0.75rem;
       }
     }
   </style>
 </head>
 <body>
 
-<!-- ====== INSTALL POPUP ====== -->
-<div id="installPopup" class="install-popup-overlay">
-  <div class="install-popup">
-    <button class="popup-close" id="closePopup" aria-label="Close">
-      <i class="fas fa-times"></i>
-    </button>
-    <div class="popup-icon">
-      <i class="fab fa-whatsapp"></i>
-    </div>
-    <h2>Install App</h2>
-    <p>Get a faster, app-like experience with offline support.</p>
-    
-    <div class="popup-instructions">
-      <div class="step">
-        <i class="fas fa-arrow-down"></i>
-        <span>Tap the <strong>Share</strong> or <strong>Menu</strong> icon in your browser</span>
-      </div>
-      <div class="step">
-        <i class="fas fa-plus-circle"></i>
-        <span>Select <strong>Add to Home Screen</strong> or <strong>Install App</strong></span>
-      </div>
-      <div class="step">
-        <i class="fas fa-check-circle"></i>
-        <span>Follow the prompts to install</span>
-      </div>
-    </div>
-
-    <div class="popup-buttons">
-      <button class="btn-install" id="installBtn">
-        <i class="fas fa-download"></i> Install
-      </button>
-      <button class="btn-later" id="laterBtn">Later</button>
-    </div>
+<!-- ====== INSTALL BANNER ====== -->
+<div id="installBanner" class="install-banner">
+  <div class="banner-icon">
+    <i class="fas fa-download"></i>
+  </div>
+  <div class="banner-text">
+    <h4>Install WhatsApp Direct</h4>
+    <p>Add to home screen for faster access</p>
+  </div>
+  <div class="banner-actions">
+    <button class="btn-close-banner" id="closeBanner"><i class="fas fa-times"></i></button>
+    <button class="btn-install-banner" id="installBannerBtn">Install</button>
   </div>
 </div>
 
@@ -897,100 +847,69 @@
   })();
 
   // ============================================================
-  // PWA INSTALL POPUP LOGIC
+  // PWA INSTALL LOGIC
   // ============================================================
   (function() {
-    const popup = document.getElementById('installPopup');
-    const closeBtn = document.getElementById('closePopup');
-    const laterBtn = document.getElementById('laterBtn');
-    const installBtn = document.getElementById('installBtn');
+    const banner = document.getElementById('installBanner');
+    const installBtn = document.getElementById('installBannerBtn');
+    const closeBtn = document.getElementById('closeBanner');
     let deferredPrompt = null;
 
-    // Check if app is already installed (standalone mode)
+    // Check if already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                          window.navigator.standalone === true;
 
-    // Only show popup if not already installed
-    if (!isStandalone) {
-      // Show popup after 3 seconds
-      setTimeout(() => {
-        // Check if we've already shown it recently (session storage)
-        const popupShown = sessionStorage.getItem('installPopupShown');
-        if (!popupShown) {
-          popup.classList.add('active');
-          sessionStorage.setItem('installPopupShown', 'true');
-        }
-      }, 3000);
+    // Hide banner if already installed
+    if (isStandalone) {
+      banner.classList.remove('active');
+      return;
     }
 
-    // Close popup
-    function closePopup() {
-      popup.classList.remove('active');
-    }
-
-    closeBtn.addEventListener('click', closePopup);
-    laterBtn.addEventListener('click', closePopup);
-
-    // Click outside to close
-    popup.addEventListener('click', function(e) {
-      if (e.target === this) {
-        closePopup();
-      }
-    });
-
-    // Install button - trigger native install or show instructions
-    installBtn.addEventListener('click', function() {
-      if (deferredPrompt) {
-        // Native install prompt available
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-          } else {
-            console.log('User dismissed the install prompt');
-          }
-          deferredPrompt = null;
-          closePopup();
-        });
-      } else {
-        // No native prompt - show instructions (already visible in popup)
-        // Just close the popup after a moment
-        alert('📱 To install this app:\n\n1. Tap the Share or Menu button\n2. Select "Add to Home Screen"\n3. Follow the prompts');
-        closePopup();
-      }
-    });
-
-    // Listen for the beforeinstallprompt event
+    // Listen for beforeinstallprompt
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault();
-      // Stash the event so it can be triggered later
       deferredPrompt = e;
-      console.log('[PWA] beforeinstallprompt event captured');
+      console.log('[PWA] beforeinstallprompt captured');
       
-      // Show the popup if it's not already showing
-      if (!popup.classList.contains('active')) {
-        setTimeout(() => {
-          const popupShown = sessionStorage.getItem('installPopupShown');
-          if (!popupShown) {
-            popup.classList.add('active');
-            sessionStorage.setItem('installPopupShown', 'true');
-          }
-        }, 2000);
+      // Show banner after 2 seconds
+      setTimeout(() => {
+        const bannerShown = sessionStorage.getItem('bannerShown');
+        if (!bannerShown) {
+          banner.classList.add('active');
+          sessionStorage.setItem('bannerShown', 'true');
+        }
+      }, 2000);
+    });
+
+    // Handle install button click
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        // Show native install prompt
+        deferredPrompt.prompt();
+        const result = await deferredPrompt.userChoice;
+        console.log(`[PWA] User ${result.outcome}`);
+        deferredPrompt = null;
+        banner.classList.remove('active');
+      } else {
+        // Fallback for browsers without native prompt
+        alert('📱 To install this app:\n\n1. Tap the Share or Menu button\n2. Select "Add to Home Screen" or "Install App"\n3. Follow the prompts');
+        banner.classList.remove('active');
       }
+    });
+
+    // Close banner
+    closeBtn.addEventListener('click', () => {
+      banner.classList.remove('active');
+      sessionStorage.setItem('bannerShown', 'true');
     });
 
     // Handle successful installation
-    window.addEventListener('appinstalled', (e) => {
-      console.log('[PWA] App was installed successfully');
-      closePopup();
-      // Optional: show a success message
-      setTimeout(() => {
-        alert('🎉 App installed successfully! You can now use it from your home screen.');
-      }, 500);
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] App installed');
+      banner.classList.remove('active');
     });
 
-    console.log('[PWA] Install popup ready');
+    console.log('[PWA] Install banner ready');
   })();
 
   // ============================================================
@@ -998,7 +917,7 @@
   // ============================================================
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js')
+      navigator.serviceWorker.register('/sw.js')
         .then(function(registration) {
           console.log('[PWA] Service Worker registered successfully:', registration);
         })
